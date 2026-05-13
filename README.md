@@ -1,73 +1,68 @@
-# React + TypeScript + Vite
+# Coding Exercise: Movie Browser
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**Time limit:** 45 minutes  
+**Stack:** React + TypeScript  
+**Rules:** No AI assistance. No autocomplete beyond basic syntax highlighting. Talk out loud as you code.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## The Problem
 
-## React Compiler
+You have been given access to a public REST API that returns a list of movies. Build a Movie Browser that displays this data as a filterable, paginated list of cards.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+**API endpoint:** `GET https://api.themoviedb.org/3/discover/movie`
 
-## Expanding the ESLint configuration
+Requires a TMDB API key passed as `api_key`. The endpoint returns a paginated results array. Each movie object has at minimum: `id`, `title`, `release_date`, `genre_ids` (an array of genre IDs resolved via `/3/genre/movie/list`), `vote_average` (0–10 rating), and `overview`. Note: `director` is not included in the discover response — it requires a separate `/3/movie/{id}/credits` call per movie and is out of scope for this exercise.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+---
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Requirements
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+### Core (complete these first)
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+1. Fetch and display the list of movies as a grid of cards. Each card should show: **title**, **year**, **rating** (`vote_average`), and **description** (`overview`). Display the first genre tag as a badge. (Director substituted with description — not available from the discover endpoint without per-movie credit calls.)
+2. Show a loading state while data is being fetched
+3. Show an error state if the fetch fails
+4. Add a text input that filters the cards by **title**, **genre**, and **year** — partial matches should work, case-insensitive
+5. Add pagination — display **6 cards per page** with previous/next controls. Applying a filter should reset to page 1
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Stretch (only if time permits)
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+6. Sort cards by **rating** (high to low) or **year** (newest first) via a dropdown
+7. Show an empty state message when the filter returns no results
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+---
+
+## What We're Looking For
+
+- **Types first.** Define your interfaces and types before writing any component code.
+- **Clean component structure.** Separate concerns — data fetching, filtering logic, and rendering should not all live in one component.
+- **Behavior over appearance.** A working, unstyled solution is better than a polished, broken one.
+- **Edge cases.** What happens when the fetch fails? When the filter matches nothing? When you're on page 3 and apply a filter?
+- **Think out loud.** Explain your decisions as you go — we're evaluating your reasoning, not just the output.
+
+---
+
+## Ground Rules
+
+- Read this entire prompt before writing any code
+- Start with TypeScript types and interfaces
+- Write the component skeleton before filling in logic
+- Get the happy path working before handling edge cases
+- Run your code early and often — an empty component that renders is a good first checkpoint
+
+---
+
+## Suggested Approach
+
+1. Define a `Movie` interface that matches the API response shape
+2. Write a `useFetch` hook (or inline fetch logic) for the API call
+3. Build a `MovieCard` component — static first, then wired to real data
+4. Build the `MovieBrowser` container — render the card grid, handle loading and error states
+5. Add the filter input and filtering logic
+6. Add pagination
+7. Stretch: sort dropdown, empty state
+
+---
+
+*You have 45 minutes. Good luck.*
